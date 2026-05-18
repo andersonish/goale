@@ -366,7 +366,7 @@ shareBtn.addEventListener('click', () => {
   const stats = getStats();
   const streakLine = stats.streak > 0 ? `🔥 Streak: ${stats.streak}` : '';
 
-  const text = [
+  const lines = [
     `⚽ Goale #${dayNum} — ${result}`,
     `Guess the European football club in 6 tries`,
     ``,
@@ -374,10 +374,10 @@ shareBtn.addEventListener('click', () => {
     rows,
     ``,
     reviews[0],
-    streakLine,
-    ``,
-    `▶️ https://goale.app`
-  ].filter(Boolean).join('\n');
+  ];
+  if (streakLine) lines.push(streakLine);
+  lines.push(``, `▶️ https://goale.app`);
+  const text = lines.join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
 });
