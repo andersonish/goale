@@ -3,6 +3,7 @@ let clubs = [];
 let target = null;
 let guesses = [];
 let gameOver = false;
+let hintUsed = false;
 
 // ── 8-bit Sound Effects ──
 const SFX = {
@@ -63,6 +64,7 @@ const statsBtn = document.getElementById('stats-btn');
 const helpModal = document.getElementById('help-modal');
 const statsModal = document.getElementById('stats-modal');
 const progressBar = document.getElementById('progress-bar');
+const hintBtn = document.getElementById('hint-btn');
 
 // Set landing date
 const today = new Date();
@@ -246,6 +248,17 @@ function updateAcHighlight(items) {
 
 input.addEventListener('blur', () => setTimeout(() => acList.classList.add('hidden'), 150));
 
+// ── Hint ──
+hintBtn.addEventListener('click', () => {
+  if (hintUsed || gameOver) return;
+  hintUsed = true;
+  hintBtn.classList.add('hidden');
+  SFX.tone(440, 0.1, 'square', 0.1);
+  SFX.tone(550, 0.1, 'square', 0.1, 0.08);
+  showToast(`${target.countryFlag} ${target.country}`);
+  saveState();
+});
+
 // ── Guess logic ──
 guessBtn.addEventListener('click', submitGuess);
 
@@ -272,6 +285,9 @@ function submitGuess() {
     endGame(false);
   } else {
     SFX.guess();
+    if (guesses.length >= 3 && !hintUsed) {
+      hintBtn.classList.remove('hidden');
+    }
   }
 
   saveState();
@@ -341,6 +357,7 @@ function endGame(won) {
   gameOver = true;
   input.disabled = true;
   guessBtn.disabled = true;
+  hintBtn.classList.add('hidden');
 
   if (won) {
     resultMessage.textContent = `🎉 ${target.name}! Got it in ${guesses.length}/${MAX_GUESSES}`;
@@ -409,9 +426,10 @@ shareBtn.addEventListener('click', () => {
   const stats = getStats();
   const streakLine = stats.streak > 0 ? `🔥 Streak: ${stats.streak}` : '';
 
+  const hintTag = hintUsed ? ' 💡' : '';
   const blank = `​`;
   const lines = [
-    `⚽ Goale #${dayNum} — ${result}`,
+    `⚽ Goale #${dayNum} — ${result}${hintTag}`,
     `Guess the European football club in 6 tries`,
     blank,
     `    🔤  🏴  📅  🏟️`,
@@ -455,7 +473,7 @@ function renderStats() {
 
 // ── State persistence ──
 function saveState() {
-  const state = { day: getDayNumber(), guesses, gameOver };
+  const state = { day: getDayNumber(), guesses, gameOver, hintUsed };
   localStorage.setItem('goale-state', JSON.stringify(state));
 }
 
@@ -476,6 +494,10 @@ function loadState() {
     }
   });
   renderProgress();
+  if (state.hintUsed) hintUsed = true;
+  if (!state.gameOver && guesses.length >= 3 && !hintUsed) {
+    hintBtn.classList.remove('hidden');
+  }
   if (state.gameOver) {
     gameOver = true;
     input.disabled = true;
