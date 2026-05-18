@@ -341,14 +341,18 @@ shareBtn.addEventListener('click', () => {
     cta = `Can you crack today's club? ⚽`;
   }
 
+  const stats = getStats();
+  const streakLine = stats.streak > 1 ? `🔥 Streak: ${stats.streak}` : '';
+
   const text = [
     `⚽ Goale #${dayNum} — ${result}`,
     ``,
     rows,
     ``,
+    streakLine,
     cta,
     `▶️ https://goale.app`
-  ].join('\n');
+  ].filter(Boolean).join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
 });
