@@ -316,7 +316,7 @@ shareBtn.addEventListener('click', () => {
     rows,
     ``,
     cta,
-    `▶️ andersonish.github.io/footle`
+    `▶️ https://andersonish.github.io/footle`
   ].join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
