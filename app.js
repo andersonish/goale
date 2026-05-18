@@ -49,7 +49,7 @@ fetch('clubs.json')
   });
 
 function pickDaily(list) {
-  const epoch = new Date(2025, 0, 1).getTime();
+  const epoch = new Date(2026, 4, 18).getTime();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const dayIndex = Math.floor((today.getTime() - epoch) / 86400000);
@@ -57,10 +57,10 @@ function pickDaily(list) {
 }
 
 function getDayNumber() {
-  const epoch = new Date(2025, 0, 1).getTime();
+  const epoch = new Date(2026, 4, 18).getTime();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return Math.floor((today.getTime() - epoch) / 86400000);
+  return Math.floor((today.getTime() - epoch) / 86400000) + 1;
 }
 
 // ── Letter matching (Wordle algorithm) ──
