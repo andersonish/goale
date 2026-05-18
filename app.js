@@ -4,6 +4,45 @@ let target = null;
 let guesses = [];
 let gameOver = false;
 
+// ── 8-bit Sound Effects ──
+const SFX = {
+  ctx: null,
+  init() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  },
+  tone(freq, duration, type = 'square', vol = 0.15, delay = 0) {
+    this.init();
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    gain.gain.value = vol;
+    gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(this.ctx.currentTime + delay);
+    osc.stop(this.ctx.currentTime + delay + duration);
+  },
+  guess() {
+    this.tone(520, 0.08);
+    this.tone(680, 0.08, 'square', 0.12, 0.07);
+  },
+  error() {
+    this.tone(180, 0.15, 'sawtooth', 0.12);
+    this.tone(140, 0.15, 'sawtooth', 0.1, 0.1);
+  },
+  win() {
+    [523, 659, 784, 880, 1047].forEach((f, i) =>
+      this.tone(f, 0.15, 'square', 0.12, i * 0.12)
+    );
+  },
+  lose() {
+    [400, 350, 280].forEach((f, i) =>
+      this.tone(f, 0.25, 'triangle', 0.1, i * 0.2)
+    );
+  }
+};
+
 // ── Landing page ──
 const landing = document.getElementById('landing');
 const gameView = document.getElementById('game');
@@ -216,8 +255,8 @@ function submitGuess() {
   if (!name) return;
 
   const club = clubs.find(c => c.name.toLowerCase() === name.toLowerCase());
-  if (!club) { showToast('Not a valid club'); return; }
-  if (guesses.includes(club.name)) { showToast('Already guessed'); return; }
+  if (!club) { SFX.error(); showToast('Not a valid club'); return; }
+  if (guesses.includes(club.name)) { SFX.error(); showToast('Already guessed'); return; }
 
   guesses.push(club.name);
   input.value = '';
@@ -231,6 +270,8 @@ function submitGuess() {
     endGame(true);
   } else if (guesses.length >= MAX_GUESSES) {
     endGame(false);
+  } else {
+    SFX.guess();
   }
 
   saveState();
@@ -303,9 +344,11 @@ function endGame(won) {
 
   if (won) {
     resultMessage.textContent = `🎉 ${target.name}! Got it in ${guesses.length}/${MAX_GUESSES}`;
+    SFX.win();
     launchConfetti();
   } else {
     resultMessage.textContent = `The answer was ${target.countryFlag} ${target.name}`;
+    SFX.lose();
   }
   resultContainer.classList.remove('hidden');
   updateStats(won);
