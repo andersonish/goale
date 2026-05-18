@@ -39,7 +39,7 @@ function showGame() {
 playBtn.addEventListener('click', showGame);
 landingHelpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
 
-fetch('clubs.json?v=2')
+fetch('clubs.json?v=3')
   .then(r => r.json())
   .then(data => {
     clubs = data;
@@ -311,12 +311,12 @@ shareBtn.addEventListener('click', () => {
   }
 
   const text = [
-    `⚽ Footle #${dayNum} — ${result}`,
+    `⚽ Goale #${dayNum} — ${result}`,
     ``,
     rows,
     ``,
     cta,
-    `▶️ https://andersonish.github.io/footle`
+    `▶️ https://andersonish.github.io/goale`
   ].join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
@@ -324,7 +324,7 @@ shareBtn.addEventListener('click', () => {
 
 // ── Stats ──
 function getStats() {
-  return JSON.parse(localStorage.getItem('footle-stats') || '{"played":0,"won":0,"streak":0,"maxStreak":0}');
+  return JSON.parse(localStorage.getItem('goale-stats') || '{"played":0,"won":0,"streak":0,"maxStreak":0}');
 }
 
 function updateStats(won) {
@@ -337,7 +337,7 @@ function updateStats(won) {
   } else {
     s.streak = 0;
   }
-  localStorage.setItem('footle-stats', JSON.stringify(s));
+  localStorage.setItem('goale-stats', JSON.stringify(s));
   renderStats();
 }
 
@@ -352,15 +352,15 @@ function renderStats() {
 // ── State persistence ──
 function saveState() {
   const state = { day: getDayNumber(), guesses, gameOver };
-  localStorage.setItem('footle-state', JSON.stringify(state));
+  localStorage.setItem('goale-state', JSON.stringify(state));
 }
 
 function loadState() {
-  const raw = localStorage.getItem('footle-state');
+  const raw = localStorage.getItem('goale-state');
   if (!raw) return;
   const state = JSON.parse(raw);
   if (state.day !== getDayNumber()) {
-    localStorage.removeItem('footle-state');
+    localStorage.removeItem('goale-state');
     return;
   }
   showGame();

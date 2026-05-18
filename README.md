@@ -1,4 +1,4 @@
-# ⚽ Footle
+# ⚽ Goale
 
 A daily Wordle-style guessing game for European football clubs. Six chances to identify today's club using letter feedback and attribute hints.
 
@@ -30,7 +30,7 @@ Static site — no backend, no build step. Just HTML, CSS, and vanilla JS.
 ## Run Locally
 
 ```bash
-cd footle
+cd goale
 python3 -m http.server 8080
 ```
 
