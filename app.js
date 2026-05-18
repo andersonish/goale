@@ -279,27 +279,39 @@ function endGame(won) {
 // ── Share ──
 shareBtn.addEventListener('click', () => {
   const dayNum = getDayNumber();
-  const grid = guesses.map(name => {
+  const won = guesses[guesses.length - 1] === target.name;
+  const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
+  const result = won ? `✅ Solved in ${score}` : `❌ Failed ${score}`;
+  const answerLen = target.name.replace(/\s/g, '').length;
+
+  const rows = guesses.map((name, i) => {
     const club = clubs.find(c => c.name === name);
     const countryMatch = club.country === target.country;
     const leagueMatch = club.league === target.league;
-    const foundedMatch = club.founded === target.founded;
-    const stadiumMatch = club.stadiumCapacity === target.stadiumCapacity;
+    const foundedDiff = club.founded - target.founded;
+    const stadiumDiff = club.stadiumCapacity - target.stadiumCapacity;
     const nameLetters = matchLetters(club.name, target.name);
-    const answerLen = target.name.replace(/\s/g, '').length;
-    const nameMatchCount = nameLetters.filter(l => l.status === 'correct' || l.status === 'close').length;
-    const nameMatch = nameMatchCount === answerLen ? '🟩' : nameMatchCount > 0 ? '🟨' : '🟥';
-    return [
-      leagueMatch ? '🟩' : countryMatch ? '🟨' : '🟥',
-      foundedMatch ? '🟩' : '🟥',
-      stadiumMatch ? '🟩' : '🟥',
-      nameMatch,
-    ].join('');
+    const matchCount = nameLetters.filter(l => l.status === 'correct' || l.status === 'close').length;
+
+    const nameCol = matchCount === answerLen ? '✅' : `${matchCount}L`;
+    const leagueCol = leagueMatch ? '✅' : countryMatch ? '🟨' : '❌';
+    const foundedCol = foundedDiff === 0 ? '✅' : foundedDiff > 0 ? '⬇️' : '⬆️';
+    const stadiumCol = stadiumDiff === 0 ? '✅' : stadiumDiff > 0 ? '⬇️' : '⬆️';
+
+    return `${i + 1}) ${nameCol} ${leagueCol} ${foundedCol} ${stadiumCol}`;
   }).join('\n');
 
-  const won = guesses[guesses.length - 1] === target.name;
-  const score = won ? `${guesses.length}/${MAX_GUESSES}` : `X/${MAX_GUESSES}`;
-  const text = `⚽ Footle #${dayNum} ${score}\n\n${grid}`;
+  const text = [
+    `⚽ Footle #${dayNum}`,
+    `Guess the European football club in 6 tries.`,
+    result,
+    ``,
+    `📊 Match report`,
+    `   📝 ⚽ 📅 🏟️`,
+    rows,
+    ``,
+    `🔗 andersonish.github.io/footle`
+  ].join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
 });
