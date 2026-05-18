@@ -39,6 +39,10 @@ function showGame() {
 
 playBtn.addEventListener('click', showGame);
 landingHelpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+document.getElementById('logo-btn').addEventListener('click', () => {
+  gameView.classList.add('hidden');
+  landing.classList.remove('hidden');
+});
 
 fetch('clubs.json?v=4')
   .then(r => r.json())
