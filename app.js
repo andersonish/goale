@@ -370,7 +370,7 @@ shareBtn.addEventListener('click', () => {
     `⚽ Goale #${dayNum} — ${result}`,
     `Guess the European football club in 6 tries`,
     ``,
-    `   🔤 🏟️ 📅 🏟️`,
+    `   NM LG FD ST`,
     rows,
     ``,
     reviews[0],
