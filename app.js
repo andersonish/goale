@@ -354,25 +354,28 @@ shareBtn.addEventListener('click', () => {
     return `${i + 1}) ${nameCol} ${leagueCol} ${foundedCol} ${stadiumCol}`;
   }).join('\n');
 
-  let cta;
-  if (won && guesses.length <= 2) {
-    cta = `Think you can match that? 👀`;
-  } else if (won) {
-    cta = `Can you beat my score? ⚽`;
-  } else {
-    cta = `Can you crack today's club? ⚽`;
-  }
+  const reviews = won ? [
+    guesses.length === 1 ? `Scout's dream. One look was enough. 🏆` :
+    guesses.length === 2 ? `Clinical finish. No time wasted. 🎯` :
+    guesses.length === 3 ? `Solid scouting report. Well played. 📋` :
+    guesses.length === 4 ? `Took some digging, but got there. 🔍` :
+    guesses.length === 5 ? `Squeezed it in. Nervy finish. 😅` :
+    `Last-minute winner. Pure drama. 🥵`
+  ] : [`Transfer window closed. Better luck tomorrow. 📝`];
 
   const stats = getStats();
-  const streakLine = stats.streak > 1 ? `🔥 Streak: ${stats.streak}` : '';
+  const streakLine = stats.streak > 0 ? `🔥 Streak: ${stats.streak}` : '';
 
   const text = [
     `⚽ Goale #${dayNum} — ${result}`,
+    `Guess the European football club in 6 tries`,
     ``,
+    `   🔤 🏟️ 📅 🏟️`,
     rows,
     ``,
+    reviews[0],
     streakLine,
-    cta,
+    ``,
     `▶️ https://goale.app`
   ].filter(Boolean).join('\n');
 
