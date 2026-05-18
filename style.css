@@ -22,6 +22,14 @@ html{font-size:16px}
 body{
   font-family:var(--body-font);
   background:var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      rgba(106,190,48,.03) 0px,
+      rgba(106,190,48,.03) 40px,
+      rgba(106,190,48,.06) 40px,
+      rgba(106,190,48,.06) 80px
+    );
   color:var(--text);
   min-height:100dvh;
   display:flex;
