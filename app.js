@@ -255,7 +255,16 @@ hintBtn.addEventListener('click', () => {
   hintBtn.classList.add('hidden');
   SFX.tone(440, 0.1, 'square', 0.1);
   SFX.tone(550, 0.1, 'square', 0.1, 0.08);
-  showToast(`${target.countryFlag} ${target.country}`);
+  const leagueKnown = guesses.some(n => {
+    const c = clubs.find(cl => cl.name === n);
+    return c && c.league === target.league;
+  });
+  if (leagueKnown) {
+    const lastChar = target.name.slice(-1).toUpperCase();
+    showToast(`LAST LETTER: ${lastChar}`);
+  } else {
+    showToast(`${target.countryFlag} ${target.league}`);
+  }
   saveState();
 });
 
