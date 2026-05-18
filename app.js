@@ -23,6 +23,7 @@ const helpBtn = document.getElementById('help-btn');
 const statsBtn = document.getElementById('stats-btn');
 const helpModal = document.getElementById('help-modal');
 const statsModal = document.getElementById('stats-modal');
+const progressBar = document.getElementById('progress-bar');
 
 // Set landing date
 const today = new Date();
@@ -45,6 +46,7 @@ fetch('clubs.json?v=4')
     clubs = data;
     target = pickDaily(clubs);
     landingNumber.textContent = `No. ${getDayNumber()}`;
+    renderProgress();
     showYesterday();
     loadState();
   });
@@ -73,6 +75,20 @@ function showYesterday() {
   const el = document.getElementById('yesterday');
   el.textContent = `YESTERDAY: ${club.countryFlag} ${club.name}`;
   el.classList.remove('hidden');
+}
+
+// ── Progress bar ──
+function renderProgress() {
+  progressBar.innerHTML = '';
+  for (let i = 0; i < MAX_GUESSES; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'progress-dot';
+    if (i < guesses.length) {
+      const won = guesses[i] === target.name;
+      dot.classList.add(won ? 'correct' : 'used');
+    }
+    progressBar.appendChild(dot);
+  }
 }
 
 // ── Letter matching (Wordle algorithm) ──
@@ -201,9 +217,11 @@ function submitGuess() {
 
   guesses.push(club.name);
   input.value = '';
+  input.blur();
   acList.classList.add('hidden');
 
   renderGuessRow(club);
+  renderProgress();
 
   if (club.name === target.name) {
     endGame(true);
