@@ -45,6 +45,7 @@ fetch('clubs.json?v=4')
     clubs = data;
     target = pickDaily(clubs);
     landingNumber.textContent = `No. ${getDayNumber()}`;
+    showYesterday();
     loadState();
   });
 
@@ -61,6 +62,17 @@ function getDayNumber() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return Math.floor((today.getTime() - epoch) / 86400000) + 1;
+}
+
+function showYesterday() {
+  const dayNum = getDayNumber();
+  if (dayNum <= 1) return;
+  const epoch = new Date(2026, 4, 18).getTime();
+  const yesterdayIndex = dayNum - 2;
+  const club = clubs[((yesterdayIndex % clubs.length) + clubs.length) % clubs.length];
+  const el = document.getElementById('yesterday');
+  el.textContent = `YESTERDAY: ${club.countryFlag} ${club.name}`;
+  el.classList.remove('hidden');
 }
 
 // ── Letter matching (Wordle algorithm) ──
@@ -269,6 +281,7 @@ function endGame(won) {
 
   if (won) {
     resultMessage.textContent = `🎉 ${target.name}! Got it in ${guesses.length}/${MAX_GUESSES}`;
+    launchConfetti();
   } else {
     resultMessage.textContent = `The answer was ${target.countryFlag} ${target.name}`;
   }
@@ -417,6 +430,55 @@ document.querySelectorAll('.modal').forEach(modal => {
     if (e.target === modal) modal.classList.add('hidden');
   });
 });
+
+// ── Confetti ──
+function launchConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999';
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ['#00E676','#FFB300','#FF5252','#2979FF','#fff'];
+  const pieces = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: -20 - Math.random() * canvas.height * 0.5,
+    w: 6 + Math.random() * 6,
+    h: 4 + Math.random() * 4,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 3,
+    vy: 2 + Math.random() * 4,
+    rot: Math.random() * Math.PI * 2,
+    rv: (Math.random() - 0.5) * 0.2
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    pieces.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.05;
+      p.rot += p.rv;
+      if (p.y < canvas.height + 20) alive = true;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (alive && frame < 300) {
+      requestAnimationFrame(draw);
+    } else {
+      canvas.remove();
+    }
+  }
+  requestAnimationFrame(draw);
+}
 
 // ── Toast ──
 function showToast(msg) {
