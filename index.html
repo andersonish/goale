@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Footle — Guess the Club</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="scanlines"></div>
+
+  <!-- Landing page -->
+  <div id="landing">
+    <div class="landing-content">
+      <div class="landing-logo">
+        <img class="landing-hero" src="hero.png" alt="The Manager" draggable="false">
+        <h1 class="logo-text">FOOTLE</h1>
+      </div>
+      <p class="landing-tagline">GUESS THE CLUB</p>
+      <p class="landing-desc">6 CHANCES TO FIND TODAY'S<br>EUROPEAN FOOTBALL CLUB</p>
+      <button id="play-btn">&#9654; PLAY</button>
+      <button id="landing-help-btn">? HOW TO PLAY</button>
+      <div class="landing-meta">
+        <span id="landing-date"></span>
+        <span class="landing-dot">-</span>
+        <span id="landing-number"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game view -->
+  <div id="game" class="hidden">
+    <header>
+      <h1>FOOTLE</h1>
+      <div class="header-right">
+        <button id="stats-btn" title="Statistics">STATS</button>
+        <button id="help-btn" title="How to play">?</button>
+      </div>
+    </header>
+
+    <div class="guess-legend">
+      <span class="legend-item"><span class="legend-box correct"></span> RIGHT SPOT</span>
+      <span class="legend-item"><span class="legend-box close"></span> WRONG SPOT</span>
+      <span class="legend-item"><span class="legend-box wrong"></span> NOT IN NAME</span>
+    </div>
+
+    <main>
+      <div id="guesses-container"></div>
+
+      <div id="result-container" class="hidden">
+        <div id="result-message"></div>
+        <button id="share-btn">SHARE RESULT</button>
+      </div>
+
+      <div id="input-area">
+        <div class="input-wrapper">
+          <input type="text" id="club-input" placeholder="TYPE A CLUB NAME..." autocomplete="off">
+          <button id="guess-btn">GUESS</button>
+        </div>
+        <div id="autocomplete-list" class="hidden"></div>
+      </div>
+    </main>
+  </div>
+
+  <div id="help-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close">X</button>
+      <h2>HOW TO PLAY</h2>
+      <p>GUESS THE EUROPEAN FOOTBALL CLUB IN 6 TRIES.</p>
+
+      <div class="help-section">
+        <h3>LETTERS</h3>
+        <p>EACH LETTER IS COLORED:</p>
+        <div class="help-letters">
+          <div class="letter-tile correct">A</div>
+          <div class="letter-tile close">R</div>
+          <div class="letter-tile wrong">S</div>
+          <div class="letter-tile wrong">E</div>
+        </div>
+        <div class="help-legend">
+          <div><span class="legend-box correct"></span> = RIGHT LETTER, RIGHT SPOT</div>
+          <div><span class="legend-box close"></span> = RIGHT LETTER, WRONG SPOT</div>
+          <div><span class="legend-box wrong"></span> = LETTER NOT IN NAME</div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h3>CLUES</h3>
+        <div class="help-clues">
+          <div class="help-row">
+            <span class="help-label">LEAGUE</span>
+            <span class="pill close">CHAMPIONSHIP</span>
+          </div>
+          <div class="help-detail">GREEN = EXACT MATCH, YELLOW = RIGHT COUNTRY WRONG LEAGUE, RED = WRONG</div>
+          <div class="help-row">
+            <span class="help-label">FOUNDED</span>
+            <span class="pill wrong">1905 &#9650;</span>
+          </div>
+          <div class="help-detail">ARROW SHOWS IF ANSWER IS HIGHER OR LOWER</div>
+          <div class="help-row">
+            <span class="help-label">STADIUM</span>
+            <span class="pill wrong">40K &#9660;</span>
+          </div>
+          <div class="help-row">
+            <span class="help-label">NAME</span>
+            <span class="pill close">3/7 LETTERS</span>
+          </div>
+          <div class="help-detail">MATCHING LETTERS OUT OF ANSWER LENGTH</div>
+        </div>
+      </div>
+
+      <p class="help-footer">A NEW CLUB EVERY DAY!</p>
+    </div>
+  </div>
+
+  <div id="stats-modal" class="modal hidden">
+    <div class="modal-content">
+      <button class="modal-close">X</button>
+      <h2>STATISTICS</h2>
+      <div id="stats-body">
+        <div class="stat-item"><span id="stat-played">0</span><label>PLAYED</label></div>
+        <div class="stat-item"><span id="stat-won">0</span><label>WON</label></div>
+        <div class="stat-item"><span id="stat-streak">0</span><label>STREAK</label></div>
+        <div class="stat-item"><span id="stat-max">0</span><label>BEST</label></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
