@@ -303,6 +303,7 @@ main{
   display:grid;
   grid-template-columns:1fr 1fr 1fr 1fr;
   gap:4px;
+  perspective:600px;
 }
 
 .hint-pill{
@@ -314,6 +315,17 @@ main{
   border:2px solid;
   text-align:center;
   font-family:var(--body-font);
+  animation:flipIn .4s ease backwards;
+}
+.hint-pill:nth-child(1){animation-delay:.3s}
+.hint-pill:nth-child(2){animation-delay:.5s}
+.hint-pill:nth-child(3){animation-delay:.7s}
+.hint-pill:nth-child(4){animation-delay:.9s}
+
+@keyframes flipIn{
+  0%{transform:rotateX(90deg);opacity:0}
+  60%{transform:rotateX(-10deg);opacity:1}
+  100%{transform:rotateX(0deg);opacity:1}
 }
 .hint-pill .label{
   font-family:var(--pixel-font);
@@ -430,8 +442,15 @@ main{
 #result-message{
   font-family:var(--pixel-font);
   font-size:.65rem;
-  margin-bottom:12px;
+  margin-bottom:8px;
   line-height:1.8;
+}
+#countdown{
+  font-family:var(--pixel-font);
+  font-size:.45rem;
+  color:var(--yellow);
+  margin-bottom:12px;
+  letter-spacing:1px;
 }
 #share-btn{
   font-family:var(--pixel-font);

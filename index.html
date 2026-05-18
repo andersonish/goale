@@ -4,10 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Goale — Guess the Club</title>
+  <meta name="description" content="A daily Wordle-style guessing game for European football clubs. 6 chances to find today's club!">
+  <meta property="og:title" content="Goale — Guess the Club">
+  <meta property="og:description" content="Can you guess today's European football club in 6 tries? New puzzle every day!">
+  <meta property="og:image" content="https://andersonish.github.io/goale/hero.png">
+  <meta property="og:url" content="https://andersonish.github.io/goale/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Goale — Guess the Club">
+  <meta name="twitter:description" content="Can you guess today's European football club in 6 tries?">
+  <meta name="twitter:image" content="https://andersonish.github.io/goale/hero.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <div class="scanlines"></div>
@@ -54,6 +64,7 @@
 
       <div id="result-container" class="hidden">
         <div id="result-message"></div>
+        <div id="countdown"></div>
         <button id="share-btn">SHARE RESULT</button>
       </div>
 
@@ -133,7 +144,7 @@
 
   <div id="toast" class="hidden"></div>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
   <script data-goatcounter="https://goale.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

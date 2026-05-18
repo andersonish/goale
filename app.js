@@ -39,7 +39,7 @@ function showGame() {
 playBtn.addEventListener('click', showGame);
 landingHelpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
 
-fetch('clubs.json?v=3')
+fetch('clubs.json?v=4')
   .then(r => r.json())
   .then(data => {
     clubs = data;
@@ -274,6 +274,24 @@ function endGame(won) {
   }
   resultContainer.classList.remove('hidden');
   updateStats(won);
+  startCountdown();
+}
+
+function startCountdown() {
+  const cd = document.getElementById('countdown');
+  function tick() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    const diff = tomorrow - now;
+    const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
+    const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+    const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+    cd.textContent = `NEXT GOALE IN ${h}:${m}:${s}`;
+  }
+  tick();
+  setInterval(tick, 1000);
 }
 
 // ── Share ──
