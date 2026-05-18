@@ -347,7 +347,7 @@ shareBtn.addEventListener('click', () => {
     rows,
     ``,
     cta,
-    `▶️ https://andersonish.github.io/goale`
+    `▶️ https://goale.app`
   ].join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
