@@ -185,6 +185,17 @@ body{
 }
 .landing-dot{margin:0 4px}
 
+.privacy{
+  text-align:center;
+  font-family:var(--body-font);
+  font-size:.75rem;
+  color:var(--text-dim);
+  opacity:.5;
+  padding:20px 16px;
+  max-width:480px;
+  margin:0 auto;
+}
+
 /* ── Game view ── */
 #game{display:flex;flex-direction:column;min-height:100dvh}
 
