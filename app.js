@@ -39,7 +39,7 @@ function showGame() {
 playBtn.addEventListener('click', showGame);
 landingHelpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
 
-fetch('clubs.json')
+fetch('clubs.json?v=2')
   .then(r => r.json())
   .then(data => {
     clubs = data;
