@@ -259,7 +259,7 @@ main{
 }
 
 /* Guess rows */
-#guesses-container{display:flex;flex-direction:column;gap:8px;flex:1}
+#guesses-container{display:flex;flex-direction:column;gap:8px}
 
 .guess-row{
   background:var(--card);

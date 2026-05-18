@@ -428,6 +428,7 @@ function loadState() {
       renderGuessRow(club);
     }
   });
+  renderProgress();
   if (state.gameOver) {
     gameOver = true;
     input.disabled = true;
