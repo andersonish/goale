@@ -301,16 +301,22 @@ shareBtn.addEventListener('click', () => {
     return `${i + 1}) ${nameCol} ${leagueCol} ${foundedCol} ${stadiumCol}`;
   }).join('\n');
 
+  let cta;
+  if (won && guesses.length <= 2) {
+    cta = `Think you can match that? 👀`;
+  } else if (won) {
+    cta = `Can you beat my score? ⚽`;
+  } else {
+    cta = `Can you crack today's club? ⚽`;
+  }
+
   const text = [
-    `⚽ Footle #${dayNum}`,
-    `Guess the European football club in 6 tries.`,
-    result,
+    `⚽ Footle #${dayNum} — ${result}`,
     ``,
-    `📊 Match report`,
-    `   📝 ⚽ 📅 🏟️`,
     rows,
     ``,
-    `🔗 andersonish.github.io/footle`
+    cta,
+    `▶️ andersonish.github.io/footle`
   ].join('\n');
 
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
