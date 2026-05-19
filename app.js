@@ -520,10 +520,9 @@ function loadState() {
     localStorage.removeItem('goale-state');
     return;
   }
-  const shuffleChanged = (state.sv || 1) !== SHUFFLE_VERSION;
-  if (shuffleChanged) {
-    state.gameOver = false;
-    state.hintUsed = false;
+  if ((state.sv || 1) !== SHUFFLE_VERSION) {
+    localStorage.removeItem('goale-state');
+    return;
   }
   showGame();
   state.guesses.forEach(name => {
@@ -550,7 +549,6 @@ function loadState() {
     }
     resultContainer.classList.remove('hidden');
   }
-  if (shuffleChanged) saveState();
   renderStats();
 }
 
