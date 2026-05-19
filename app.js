@@ -1,5 +1,5 @@
 const MAX_GUESSES = 6;
-const SHUFFLE_VERSION = 2;
+const SHUFFLE_VERSION = 3;
 let clubs = [];
 let target = null;
 let guesses = [];
@@ -111,7 +111,7 @@ function shuffleWithVariety(list) {
     let s = seed;
     return () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
   }
-  const rng = seededRandom(42);
+  const rng = seededRandom(382);
   const copy = list.slice();
   for (let i = copy.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
