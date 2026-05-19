@@ -286,8 +286,8 @@ hintBtn.addEventListener('click', () => {
     return c && c.league === target.league;
   });
   if (leagueKnown) {
-    const lastChar = target.name.slice(-1).toUpperCase();
-    showToast(`LAST LETTER: ${lastChar}`);
+    const firstChar = target.name[0].toUpperCase();
+    showToast(`FIRST LETTER: ${firstChar}`);
   } else {
     showToast(`${target.countryFlag} ${target.league}`);
   }
