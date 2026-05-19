@@ -111,7 +111,11 @@ function shuffleWithVariety(list) {
     return () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
   }
   const rng = seededRandom(42);
-  const copy = list.slice().sort(() => rng() - 0.5);
+  const copy = list.slice();
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
   const result = [copy.shift()];
   while (copy.length) {
     const lastLeague = result[result.length - 1].league;
