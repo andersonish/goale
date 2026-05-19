@@ -1,10 +1,12 @@
 const MAX_GUESSES = 6;
 const SHUFFLE_VERSION = 3;
+const EPOCH = new Date(2026, 4, 18).getTime();
 let clubs = [];
 let target = null;
 let guesses = [];
 let gameOver = false;
 let hintUsed = false;
+let shuffledCache = null;
 
 // ── 8-bit Sound Effects ──
 const SFX = {
@@ -86,8 +88,8 @@ document.getElementById('logo-btn').addEventListener('click', () => {
   landing.classList.remove('hidden');
 });
 
-fetch('clubs.json?v=6')
-  .then(r => r.json())
+fetch('clubs.json?v=7')
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
   .then(data => {
     clubs = data;
     target = pickDaily(clubs);
@@ -95,14 +97,19 @@ fetch('clubs.json?v=6')
     renderProgress();
     showYesterday();
     loadState();
-  });
+  })
+  .catch(() => showToast('Failed to load — try refreshing'));
+
+function getShuffled() {
+  if (!shuffledCache) shuffledCache = shuffleWithVariety(clubs);
+  return shuffledCache;
+}
 
 function pickDaily(list) {
-  const shuffled = shuffleWithVariety(list);
-  const epoch = new Date(2026, 4, 18).getTime();
+  const shuffled = getShuffled();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const dayIndex = Math.floor((today.getTime() - epoch) / 86400000);
+  const dayIndex = Math.floor((today.getTime() - EPOCH) / 86400000);
   return shuffled[((dayIndex % shuffled.length) + shuffled.length) % shuffled.length];
 }
 
@@ -131,16 +138,15 @@ function shuffleWithVariety(list) {
 }
 
 function getDayNumber() {
-  const epoch = new Date(2026, 4, 18).getTime();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  return Math.floor((today.getTime() - epoch) / 86400000) + 1;
+  return Math.floor((today.getTime() - EPOCH) / 86400000) + 1;
 }
 
 function showYesterday() {
   const dayNum = getDayNumber();
   if (dayNum <= 1) return;
-  const shuffled = shuffleWithVariety(clubs);
+  const shuffled = getShuffled();
   const yesterdayIndex = dayNum - 2;
   const club = shuffled[((yesterdayIndex % shuffled.length) + shuffled.length) % shuffled.length];
   const el = document.getElementById('yesterday');
