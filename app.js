@@ -85,7 +85,7 @@ document.getElementById('logo-btn').addEventListener('click', () => {
   landing.classList.remove('hidden');
 });
 
-fetch('clubs.json?v=4')
+fetch('clubs.json?v=6')
   .then(r => r.json())
   .then(data => {
     clubs = data;
@@ -97,11 +97,32 @@ fetch('clubs.json?v=4')
   });
 
 function pickDaily(list) {
+  const shuffled = shuffleWithVariety(list);
   const epoch = new Date(2026, 4, 18).getTime();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const dayIndex = Math.floor((today.getTime() - epoch) / 86400000);
-  return list[((dayIndex % list.length) + list.length) % list.length];
+  return shuffled[((dayIndex % shuffled.length) + shuffled.length) % shuffled.length];
+}
+
+function shuffleWithVariety(list) {
+  function seededRandom(seed) {
+    let s = seed;
+    return () => { s = (s * 16807 + 0) % 2147483647; return s / 2147483647; };
+  }
+  const rng = seededRandom(42);
+  const copy = list.slice().sort(() => rng() - 0.5);
+  const result = [copy.shift()];
+  while (copy.length) {
+    const lastLeague = result[result.length - 1].league;
+    const idx = copy.findIndex(c => c.league !== lastLeague);
+    if (idx >= 0) {
+      result.push(copy.splice(idx, 1)[0]);
+    } else {
+      result.push(copy.shift());
+    }
+  }
+  return result;
 }
 
 function getDayNumber() {
@@ -114,9 +135,9 @@ function getDayNumber() {
 function showYesterday() {
   const dayNum = getDayNumber();
   if (dayNum <= 1) return;
-  const epoch = new Date(2026, 4, 18).getTime();
+  const shuffled = shuffleWithVariety(clubs);
   const yesterdayIndex = dayNum - 2;
-  const club = clubs[((yesterdayIndex % clubs.length) + clubs.length) % clubs.length];
+  const club = shuffled[((yesterdayIndex % shuffled.length) + shuffled.length) % shuffled.length];
   const el = document.getElementById('yesterday');
   el.textContent = `YESTERDAY: ${club.countryFlag} ${club.name}`;
   el.classList.remove('hidden');
