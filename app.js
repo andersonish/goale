@@ -1,4 +1,5 @@
 const MAX_GUESSES = 6;
+const SHUFFLE_VERSION = 2;
 let clubs = [];
 let target = null;
 let guesses = [];
@@ -507,7 +508,7 @@ function renderStats() {
 
 // ── State persistence ──
 function saveState() {
-  const state = { day: getDayNumber(), guesses, gameOver, hintUsed };
+  const state = { day: getDayNumber(), guesses, gameOver, hintUsed, sv: SHUFFLE_VERSION };
   localStorage.setItem('goale-state', JSON.stringify(state));
 }
 
@@ -518,6 +519,11 @@ function loadState() {
   if (state.day !== getDayNumber()) {
     localStorage.removeItem('goale-state');
     return;
+  }
+  const shuffleChanged = (state.sv || 1) !== SHUFFLE_VERSION;
+  if (shuffleChanged) {
+    state.gameOver = false;
+    state.hintUsed = false;
   }
   showGame();
   state.guesses.forEach(name => {
@@ -544,6 +550,7 @@ function loadState() {
     }
     resultContainer.classList.remove('hidden');
   }
+  if (shuffleChanged) saveState();
   renderStats();
 }
 
