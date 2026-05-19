@@ -320,7 +320,7 @@ function submitGuess() {
     endGame(false);
   } else {
     SFX.guess();
-    if (guesses.length >= 3 && !hintUsed) {
+    if (guesses.length >= 4 && !hintUsed) {
       hintBtn.classList.remove('hidden');
     }
   }
@@ -534,7 +534,7 @@ function loadState() {
   });
   renderProgress();
   if (state.hintUsed) hintUsed = true;
-  if (!state.gameOver && guesses.length >= 3 && !hintUsed) {
+  if (!state.gameOver && guesses.length >= 4 && !hintUsed) {
     hintBtn.classList.remove('hidden');
   }
   if (state.gameOver) {
