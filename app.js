@@ -516,7 +516,11 @@ shareBtn.addEventListener('click', () => {
   lines.push(blank, `▶️ https://goale.app`);
   const text = lines.join('\n');
 
-  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+  if (navigator.share) {
+    navigator.share({ text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+  }
 });
 
 // ── Stats ──
