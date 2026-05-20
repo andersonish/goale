@@ -310,14 +310,22 @@ patternBtn.addEventListener('click', () => {
   SFX.tone(330, 0.1, 'square', 0.1);
   SFX.tone(440, 0.1, 'square', 0.1, 0.08);
   SFX.tone(550, 0.1, 'square', 0.1, 0.16);
-  const pattern = target.name.split('').map((ch, i) => {
-    if (ch === ' ') return ' ';
-    const found = guesses.some(g => {
+  const revealed = target.name.split('').map((ch, i) => {
+    if (ch === ' ') return true;
+    return guesses.some(g => {
       const letters = matchLetters(g, target.name);
       return letters[i] && letters[i].status === 'correct';
     });
-    return found ? ch.toUpperCase() : '_';
-  }).join(' ');
+  });
+  const unrevealed = revealed.map((r, i) => r ? -1 : i).filter(i => i >= 0);
+  if (unrevealed.length > 0 && revealed.filter(r => r).length <= 1) {
+    const shuffled = unrevealed.slice().sort(() => Math.random() - 0.5);
+    const count = Math.min(3, shuffled.length);
+    for (let k = 0; k < count; k++) revealed[shuffled[k]] = true;
+  }
+  const pattern = target.name.split('').map((ch, i) =>
+    ch === ' ' ? ' ' : revealed[i] ? ch.toUpperCase() : '_'
+  ).join(' ');
   showToast(pattern);
   saveState();
 });
