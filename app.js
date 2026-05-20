@@ -361,7 +361,6 @@ function submitGuess() {
   acList.classList.add('hidden');
 
   renderGuessRow(club);
-  renderProgress();
 
   if (club.name === target.name) {
     endGame(true);
@@ -369,6 +368,7 @@ function submitGuess() {
     endGame(false);
   } else {
     SFX.guess();
+    renderProgress();
     if (guesses.length >= 4 && !hintUsed) {
       hintBtn.classList.remove('hidden');
     }
@@ -452,6 +452,7 @@ function endGame(won) {
   guessBtn.disabled = true;
   hintBtn.classList.add('hidden');
   patternBtn.classList.add('hidden');
+  renderProgress();
 
   if (won) {
     resultMessage.textContent = `🎉 ${target.name}! Got it in ${guesses.length}/${MAX_GUESSES}`;
