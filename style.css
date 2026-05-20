@@ -446,9 +446,27 @@ main{
   animation:hintPulse 2s ease-in-out infinite;
 }
 #hint-btn:hover{background:#4a4a18}
+#pattern-btn{
+  width:100%;
+  font-family:var(--body-font);
+  font-size:1.1rem;
+  background:var(--green-bg);
+  color:var(--green);
+  border:3px solid #4b8520;
+  padding:10px;
+  cursor:pointer;
+  letter-spacing:1px;
+  margin-bottom:8px;
+  animation:patternPulse 2s ease-in-out infinite;
+}
+#pattern-btn:hover{background:#1a4a10}
 @keyframes hintPulse{
   0%,100%{box-shadow:0 0 0 rgba(251,242,54,0)}
   50%{box-shadow:0 0 12px rgba(251,242,54,.3)}
+}
+@keyframes patternPulse{
+  0%,100%{box-shadow:0 0 0 rgba(106,190,48,0)}
+  50%{box-shadow:0 0 12px rgba(106,190,48,.3)}
 }
 .input-wrapper{display:flex;gap:6px}
 #club-input{

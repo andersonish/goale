@@ -6,6 +6,7 @@ let target = null;
 let guesses = [];
 let gameOver = false;
 let hintUsed = false;
+let patternUsed = false;
 let shuffledCache = null;
 
 // ── 8-bit Sound Effects ──
@@ -68,6 +69,7 @@ const helpModal = document.getElementById('help-modal');
 const statsModal = document.getElementById('stats-modal');
 const progressBar = document.getElementById('progress-bar');
 const hintBtn = document.getElementById('hint-btn');
+const patternBtn = document.getElementById('pattern-btn');
 
 // Set landing date
 const today = new Date();
@@ -300,6 +302,26 @@ hintBtn.addEventListener('click', () => {
   saveState();
 });
 
+// ── Pattern hint ──
+patternBtn.addEventListener('click', () => {
+  if (patternUsed || gameOver) return;
+  patternUsed = true;
+  patternBtn.classList.add('hidden');
+  SFX.tone(330, 0.1, 'square', 0.1);
+  SFX.tone(440, 0.1, 'square', 0.1, 0.08);
+  SFX.tone(550, 0.1, 'square', 0.1, 0.16);
+  const pattern = target.name.split('').map((ch, i) => {
+    if (ch === ' ') return ' ';
+    const found = guesses.some(g => {
+      const letters = matchLetters(g, target.name);
+      return letters[i] && letters[i].status === 'correct';
+    });
+    return found ? ch.toUpperCase() : '_';
+  }).join(' ');
+  showToast(pattern);
+  saveState();
+});
+
 // ── Guess logic ──
 guessBtn.addEventListener('click', submitGuess);
 
@@ -328,6 +350,9 @@ function submitGuess() {
     SFX.guess();
     if (guesses.length >= 4 && !hintUsed) {
       hintBtn.classList.remove('hidden');
+    }
+    if (guesses.length >= 5 && !patternUsed) {
+      patternBtn.classList.remove('hidden');
     }
   }
 
@@ -399,6 +424,7 @@ function endGame(won) {
   input.disabled = true;
   guessBtn.disabled = true;
   hintBtn.classList.add('hidden');
+  patternBtn.classList.add('hidden');
 
   if (won) {
     resultMessage.textContent = `🎉 ${target.name}! Got it in ${guesses.length}/${MAX_GUESSES}`;
@@ -467,7 +493,7 @@ shareBtn.addEventListener('click', () => {
   const stats = getStats();
   const streakLine = stats.streak > 0 ? `🔥 Streak: ${stats.streak}` : '';
 
-  const hintTag = hintUsed ? ' 💡' : '';
+  const hintTag = (hintUsed ? ' 💡' : '') + (patternUsed ? ' 🔍' : '');
   const blank = `​`;
   const lines = [
     `⚽ Goale #${dayNum} — ${result}${hintTag}`,
@@ -514,7 +540,7 @@ function renderStats() {
 
 // ── State persistence ──
 function saveState() {
-  const state = { day: getDayNumber(), guesses, gameOver, hintUsed, sv: SHUFFLE_VERSION };
+  const state = { day: getDayNumber(), guesses, gameOver, hintUsed, patternUsed, sv: SHUFFLE_VERSION };
   localStorage.setItem('goale-state', JSON.stringify(state));
 }
 
@@ -540,8 +566,12 @@ function loadState() {
   });
   renderProgress();
   if (state.hintUsed) hintUsed = true;
+  if (state.patternUsed) patternUsed = true;
   if (!state.gameOver && guesses.length >= 4 && !hintUsed) {
     hintBtn.classList.remove('hidden');
+  }
+  if (!state.gameOver && guesses.length >= 5 && !patternUsed) {
+    patternBtn.classList.remove('hidden');
   }
   if (state.gameOver) {
     gameOver = true;
