@@ -177,6 +177,17 @@ body{
   background:var(--card);
   letter-spacing:.5px;
 }
+.landing-streak{
+  font-family:var(--pixel-font);
+  font-size:.45rem;
+  color:var(--yellow);
+  margin-top:8px;
+  padding:8px 16px;
+  border:2px solid #c8c020;
+  background:var(--yellow-bg);
+  letter-spacing:.5px;
+  text-shadow:0 0 8px rgba(251,242,54,.3);
+}
 .landing-meta{
   margin-top:20px;
   font-family:var(--body-font);

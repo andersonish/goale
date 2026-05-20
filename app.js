@@ -98,6 +98,7 @@ fetch('clubs.json?v=7')
     landingNumber.textContent = `No. ${getDayNumber()}`;
     renderProgress();
     showYesterday();
+    showLandingStreak();
     loadState();
   })
   .catch(() => showToast('Failed to load — try refreshing'));
@@ -153,6 +154,14 @@ function showYesterday() {
   const club = shuffled[((yesterdayIndex % shuffled.length) + shuffled.length) % shuffled.length];
   const el = document.getElementById('yesterday');
   el.textContent = `YESTERDAY: ${club.countryFlag} ${club.name}`;
+  el.classList.remove('hidden');
+}
+
+function showLandingStreak() {
+  const s = getStats();
+  if (s.streak < 2) return;
+  const el = document.getElementById('landing-streak');
+  el.textContent = `🔥 ${s.streak}-DAY STREAK`;
   el.classList.remove('hidden');
 }
 
