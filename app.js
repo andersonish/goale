@@ -181,16 +181,14 @@ function renderProgress() {
 
 // ── Letter matching (Wordle algorithm) ──
 function matchLetters(guess, answer) {
-  const g = guess.toUpperCase().split('');
-  const a = answer.toUpperCase().split('');
+  const g = guess.toUpperCase().replace(/\s/g, '').split('');
+  const a = answer.toUpperCase().replace(/\s/g, '').split('');
   const maxLen = Math.max(g.length, a.length);
   const result = [];
   const answerUsed = new Array(a.length).fill(false);
 
-  // pad guess to answer length with empty slots if shorter
   while (g.length < a.length) g.push('');
 
-  // pass 1: exact matches
   for (let i = 0; i < maxLen; i++) {
     if (i < a.length && g[i] === a[i]) {
       result[i] = { char: g[i], status: 'correct' };
@@ -200,11 +198,9 @@ function matchLetters(guess, answer) {
     }
   }
 
-  // pass 2: wrong position
   for (let i = 0; i < g.length; i++) {
     if (result[i].status) continue;
-    if (g[i] === '' || g[i] === ' ') { result[i].status = 'space'; continue; }
-
+    if (g[i] === '') { result[i].status = 'wrong'; continue; }
     let found = false;
     for (let j = 0; j < a.length; j++) {
       if (!answerUsed[j] && a[j] === g[i]) {
@@ -216,12 +212,7 @@ function matchLetters(guess, answer) {
     result[i].status = found ? 'close' : 'wrong';
   }
 
-  // handle spaces in the guess
-  for (let i = 0; i < result.length; i++) {
-    if (result[i].char === ' ') result[i].status = 'space';
-  }
-
-  return result.slice(0, guess.length);
+  return result.slice(0, guess.replace(/\s/g, '').length);
 }
 
 // ── Autocomplete ──
@@ -319,8 +310,8 @@ patternBtn.addEventListener('click', () => {
   SFX.tone(330, 0.1, 'square', 0.1);
   SFX.tone(440, 0.1, 'square', 0.1, 0.08);
   SFX.tone(550, 0.1, 'square', 0.1, 0.16);
-  const revealed = target.name.split('').map((ch, i) => {
-    if (ch === ' ') return true;
+  const stripped = target.name.replace(/\s/g, '');
+  const revealed = stripped.split('').map((ch, i) => {
     return guesses.some(g => {
       const letters = matchLetters(g, target.name);
       return letters[i] && letters[i].status === 'correct';
@@ -332,9 +323,11 @@ patternBtn.addEventListener('click', () => {
     const count = Math.min(3, shuffled.length);
     for (let k = 0; k < count; k++) revealed[shuffled[k]] = true;
   }
-  const pattern = target.name.split('').map((ch, i) =>
-    ch === ' ' ? ' ' : revealed[i] ? ch.toUpperCase() : '_'
-  ).join(' ');
+  let si = 0;
+  const pattern = target.name.split('').map(ch => {
+    if (ch === ' ') return ' ';
+    return revealed[si++] ? ch.toUpperCase() : '_';
+  }).join(' ');
   showToast(pattern);
   saveState();
 });
@@ -384,10 +377,16 @@ function renderGuessRow(club) {
   const letters = matchLetters(club.name, target.name);
   const letterRow = document.createElement('div');
   letterRow.className = 'letter-row';
-  letters.forEach(l => {
+  let li = 0;
+  club.name.toUpperCase().split('').forEach(ch => {
     const tile = document.createElement('div');
-    tile.className = `letter-tile ${l.status}`;
-    tile.textContent = l.status === 'space' ? '' : l.char;
+    if (ch === ' ') {
+      tile.className = 'letter-tile space';
+    } else {
+      tile.className = `letter-tile ${letters[li].status}`;
+      tile.textContent = letters[li].char;
+      li++;
+    }
     letterRow.appendChild(tile);
   });
   row.appendChild(letterRow);
