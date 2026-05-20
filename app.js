@@ -453,11 +453,22 @@ function endGame(won) {
   }
   resultContainer.classList.remove('hidden');
   updateStats(won);
-  startCountdown();
+  startCountdown(won);
 }
 
-function startCountdown() {
+function startCountdown(won) {
   const cd = document.getElementById('countdown');
+  const stats = getStats();
+  let prefix;
+  if (won && stats.streak >= 2) {
+    prefix = `🔥 ${stats.streak}-DAY STREAK — NEXT IN `;
+  } else if (won) {
+    prefix = 'NICE! NEXT GOALE IN ';
+  } else if (stats.maxStreak > 0 && stats.streak === 0) {
+    prefix = 'STREAK LOST — REDEMPTION IN ';
+  } else {
+    prefix = 'NEW CHANCE IN ';
+  }
   function tick() {
     const now = new Date();
     const tomorrow = new Date(now);
@@ -467,7 +478,7 @@ function startCountdown() {
     const h = String(Math.floor(diff / 3600000)).padStart(2, '0');
     const m = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
     const s = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-    cd.textContent = `NEXT GOALE IN ${h}:${m}:${s}`;
+    cd.textContent = `${prefix}${h}:${m}:${s}`;
   }
   tick();
   setInterval(tick, 1000);
@@ -605,6 +616,7 @@ function loadState() {
       resultMessage.textContent = `The answer was ${target.countryFlag} ${target.name}`;
     }
     resultContainer.classList.remove('hidden');
+    startCountdown(won);
   }
   renderStats();
 }
