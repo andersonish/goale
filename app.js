@@ -555,7 +555,11 @@ shareBtn.addEventListener('click', () => {
 
 // ── Stats ──
 function getStats() {
-  return JSON.parse(localStorage.getItem('goale-stats') || '{"played":0,"won":0,"streak":0,"maxStreak":0}');
+  const def = {played:0,won:0,streak:0,maxStreak:0,dist:{1:0,2:0,3:0,4:0,5:0,6:0,X:0},lastGuesses:0};
+  const s = JSON.parse(localStorage.getItem('goale-stats') || JSON.stringify(def));
+  if (!s.dist) s.dist = {1:0,2:0,3:0,4:0,5:0,6:0,X:0};
+  if (!s.lastGuesses) s.lastGuesses = 0;
+  return s;
 }
 
 function updateStats(won) {
@@ -565,8 +569,12 @@ function updateStats(won) {
     s.won++;
     s.streak++;
     s.maxStreak = Math.max(s.maxStreak, s.streak);
+    s.dist[guesses.length] = (s.dist[guesses.length] || 0) + 1;
+    s.lastGuesses = guesses.length;
   } else {
     s.streak = 0;
+    s.dist.X = (s.dist.X || 0) + 1;
+    s.lastGuesses = -1;
   }
   localStorage.setItem('goale-stats', JSON.stringify(s));
   renderStats();
@@ -574,10 +582,26 @@ function updateStats(won) {
 
 function renderStats() {
   const s = getStats();
+  const winPct = s.played ? Math.round((s.won / s.played) * 100) : 0;
   document.getElementById('stat-played').textContent = s.played;
-  document.getElementById('stat-won').textContent = s.won;
+  document.getElementById('stat-won').textContent = winPct + '%';
   document.getElementById('stat-streak').textContent = s.streak;
   document.getElementById('stat-max').textContent = s.maxStreak;
+
+  const distEl = document.getElementById('stats-dist');
+  distEl.innerHTML = '';
+  const maxVal = Math.max(1, ...Object.values(s.dist));
+  const keys = ['1','2','3','4','5','6','X'];
+  keys.forEach(k => {
+    const count = s.dist[k] || 0;
+    const pct = (count / maxVal) * 100;
+    const row = document.createElement('div');
+    row.className = 'dist-row';
+    const isCurrent = gameOver && ((k !== 'X' && s.lastGuesses === +k) || (k === 'X' && s.lastGuesses === -1));
+    if (isCurrent) row.classList.add('dist-current');
+    row.innerHTML = `<span class="dist-label">${k}</span><div class="dist-bar-track"><div class="dist-bar" style="width:${Math.max(pct, count > 0 ? 8 : 0)}%"><span class="dist-count">${count}</span></div></div>`;
+    distEl.appendChild(row);
+  });
 }
 
 // ── State persistence ──

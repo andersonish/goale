@@ -698,6 +698,62 @@ main{
   letter-spacing:.5px;
 }
 
+/* Distribution */
+.dist-title{
+  font-family:var(--pixel-font);
+  font-size:.35rem;
+  color:var(--text-dim);
+  text-align:center;
+  margin:16px 0 8px;
+  letter-spacing:1px;
+}
+#stats-dist{
+  display:flex;flex-direction:column;gap:4px;
+  padding:0 4px;
+}
+.dist-row{
+  display:flex;align-items:center;gap:6px;
+}
+.dist-label{
+  font-family:var(--pixel-font);
+  font-size:.4rem;
+  color:var(--text-dim);
+  width:14px;
+  text-align:right;
+  flex-shrink:0;
+}
+.dist-bar-track{
+  flex:1;
+  height:18px;
+}
+.dist-bar{
+  height:100%;
+  background:var(--card-border);
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  padding-right:6px;
+  min-width:0;
+  transition:width .3s ease;
+}
+.dist-current .dist-bar{
+  background:var(--green);
+}
+.dist-current .dist-label{
+  color:var(--green);
+}
+.dist-row:last-child .dist-bar{
+  background:var(--wrong);
+}
+.dist-row:last-child.dist-current .dist-bar{
+  background:var(--wrong);
+}
+.dist-count{
+  font-family:var(--pixel-font);
+  font-size:.35rem;
+  color:var(--text);
+}
+
 /* Toast */
 #toast{
   position:fixed;top:70px;left:50%;transform:translateX(-50%);
