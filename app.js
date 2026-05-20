@@ -168,6 +168,16 @@ function showLandingStreak() {
 // ── Progress bar ──
 function renderProgress() {
   progressBar.innerHTML = '';
+  const label = document.createElement('span');
+  label.className = 'progress-label';
+  if (gameOver) {
+    label.textContent = guesses[guesses.length - 1] === target.name ? 'SOLVED' : 'GAME OVER';
+  } else {
+    label.textContent = `GUESS ${guesses.length + 1}/${MAX_GUESSES}`;
+  }
+  progressBar.appendChild(label);
+  const dots = document.createElement('div');
+  dots.className = 'progress-dots';
   for (let i = 0; i < MAX_GUESSES; i++) {
     const dot = document.createElement('div');
     dot.className = 'progress-dot';
@@ -175,8 +185,9 @@ function renderProgress() {
       const won = guesses[i] === target.name;
       dot.classList.add(won ? 'correct' : 'used');
     }
-    progressBar.appendChild(dot);
+    dots.appendChild(dot);
   }
+  progressBar.appendChild(dots);
 }
 
 // ── Letter matching (Wordle algorithm) ──
